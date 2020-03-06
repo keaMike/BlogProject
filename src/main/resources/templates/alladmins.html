@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>All Admins</title>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/stylesheet.css" th:href = "@{/css/stylesheet.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+    <!--HEADER-->
+    <div th:include="fragments/header :: header"></div>
+<body>
+    <!--SIDEBAR-->
+    <div th:include="fragments/sidebar :: sidebar"></div>
+
+    <h4 class="alltitle">All Admins</h4>
+    <div class = "table">
+        <!--TABLE WITH ALL ADMINS-->
+        <table class = "table table-striped table-bordered table-hover adminlist">
+            <thead class = "thead-dark tableheader">
+                <tr>
+                    <th>Name</th>
+                    <th>Role</th>
+                    <th>ID</th>
+                    <th>Options</th>
+                </tr>
+            </thead>
+            <tbody class = "tablebody">
+                <!--LISTING ALL USERS-->
+                <tr th:each = "users : ${userList}">
+                    <!--FILTERING ONLY ADMINS-->
+                    <div th:if="${users.admin}">
+                    <td th:text = "${users.username}"></td>
+                    <td>
+                        <div th:if = "${users.admin}">
+                            Admin
+                            <i class="fas fa-user-shield roleitems" data-toggle="tooltip" title="Admin"></i>
+                            <i class="fas fa-pen-fancy roleitems" data-toggle="tooltip" title="Author"></i>
+                            <i class="fas fa-user roleitems" data-toggle="tooltip" title="User"></i>
+                        </div>
+                    </td>
+                    <td th:text = "${users.id}"></td>
+                    <td>
+                        <!--IF CURRENT USER, DO NOT SHOW OP-->
+                        <div th:unless = "${users.id} == ${user.id}">
+                            <!--USEROPERATIONS 'EDIT' & 'DELETE'-->
+                            <div th:include="fragments/useroperations :: userop"></div>
+                        </div>
+                    </td>
+                    </div>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <!--BOOTSTRAP-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+</html>

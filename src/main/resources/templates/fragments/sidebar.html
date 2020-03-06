@@ -1,0 +1,33 @@
+<div th:fragment="sidebar" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class = "container">
+        <div class = "sidebar">
+            <h2>Menu</h2>
+            <!--ONLY SHOW IF ADMIN-->
+            <div th:if = "${user.admin}">
+                <ul th:object = "${user}">
+                    <li><a th:href="@{'/home/' + ${user.id}}"><i class = "fas fa-home"></i>Home</a></li>
+                    <li><a th:href="@{'/home/' + ${user.id} + '/addblog/'}"><i class = "fas fa-plus-square"></i>Add Blog</a></li>
+                    <li><a th:href="@{'/home/' + ${user.id} + '/alladmins/'}"><i class = "fas fa-user-shield"></i>Admins</a></li>
+                    <li>
+                        <a th:href="@{'/home/' + ${user.id} + '/allusers/'}">
+                            <i class = "fas fa-user"></i>
+                            Users
+                            <span class="reqnotification" th:if="${reqnotification &gt; 0}" th:text="${reqnotification}"></span>
+                        </a>
+                    </li>
+                    </th:block>
+                    <li><a th:href="@{'/home/' + ${user.id} + '/chatroom'}"><i class="fas fa-comments"></i>Chatroom</a></li>
+                    <li><a href = "#"><i class = "fas fa-cogs"></i>Settings</a></li>
+                </ul>
+            </div>
+            <!--SHOW IF USER-->
+            <div th:unless = "${user.admin}">
+                <ul th:object = "${user}">
+                    <li><a th:href="@{'/home/' + ${user.id}}"><i class = "fas fa-home"></i>Home</a></li>
+                    <li><a th:href="@{'/home/' + ${user.id} + '/chatroom'}"><i class="fas fa-comments"></i>Chatroom</a></li>
+                    <li><a href = "#"><i class = "fas fa-cogs"></i>Settings</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

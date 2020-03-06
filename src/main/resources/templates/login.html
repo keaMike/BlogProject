@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" th:href="@{/css/login.css}" href = "/static/css/login.css">
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <div class = "container">
+        <div class = "loginimg">
+            <img src = "/static/img/loginimg.svg" th:src = "@{/img/loginimg.svg}">
+        </div>
+        <div class= "login-container">
+            <!--LOGIN FORM-->
+            <form th:method="post" th:action="@{/login}">
+                <img class = "loginavatar" src = "/static/img/loginavatar.svg" th:src = "@{/img/loginavatar.svg}">
+                <h2>Welcome to MyBlog.com</h2>
+                <div class = "input-div one">
+                    <div class = "i">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div>
+                        <h5>Username</h5>
+                        <input type="text" class = "input" name = "username">
+                    </div>
+                </div>
+                <div class = "input-div two">
+                    <div class = "i">
+                        <i class="fas fa-lock"></i>
+                    </div>
+                    <div>
+                        <h5>Password</h5>
+                        <input type="password" class = "input" name = "password">
+                    </div>
+                </div>
+                <!--REQUEST ACESS LINK-->
+                <a th:href = "@{/requestacess}">Request Acess</a>
+                <input type="submit" class = "btn" value="Login">
+            </form>
+        </div>
+    </div>
+    <!--LOGIN ANIMATION-->
+    <script type = "text/javascript" src = "/static/js/login.js" th:src = "@{/js/login.js}"></script>
+</body>
+</html>

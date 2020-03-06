@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatroom</title>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/stylesheet.css" th:href = "@{/css/stylesheet.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+    <!--HEADER-->
+    <div th:include="fragments/header :: header"></div>
+<body>
+    <!--SIDEBAR-->
+    <div th:include="fragments/sidebar :: sidebar"></div>
+    <div class = "chat-container">
+        <div class = "search-container">
+            <input type="text" placeholder="Search">
+        </div>
+        <div class = "conversation-list">
+            <!--LISTING ALL CURRENT USER CONVERSATIONS-->
+            <div th:each = "conid : ${conList}">
+                <a th:each = "chatuser : ${users}" th:href="@{'/home/' + ${user.id} + '/chatroom/' + ${chatuser.id}}">
+                    <div class = "conversation" th:if = "${conid} == ${chatuser.id}">
+                        <img src = "/static/img/loginavatar.svg" th:src = "@{/img/loginavatar.svg}">
+                        <div class = "title-text">
+                            <div>
+                                <span th:text = "${chatuser.username}"></span>
+                            </div>
+                        </div>
+
+                        <th:block th:each = "lastMsg : ${lastMsgList}"
+                                  th:if = "${lastMsg.receiverId} == ${conid} or ${lastMsg.senderId} == ${conid} ">
+                            <div class = "created-date">
+                                <span th:text = "${#dates.format(lastMsg.date, 'dd MMM')}"></span>
+                            </div>
+
+                            <div class = "conversation-message">
+                                <span th:if = "${lastMsg.senderId} == ${user.id}"
+                                      th:text = "'Dig: ' + ${lastMsg.message}"></span>
+
+                                <span th:unless = "${lastMsg.senderId} == ${user.id}"
+                                      th:text = " ${chatuser.username} + ': ' + ${lastMsg.message}"></span>
+                            </div>
+                        </th:block>
+
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="new-message-container dropup">
+            <button type="button" class="btn btn-secondary dropdown-btn"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false">
+                <span data-toggle="tooltip" title = "Add new conversation">
+                   +
+                </span>
+            </button>
+            <div class="dropdown-menu">
+                <div th:each = "chatuser : ${users}">
+                    <a th:if = "${chatuser.status}" th:href="@{'/home/' + ${user.id} + '/chatroom/' + ${chatuser.id}}" th:text = "${chatuser.username}"></a>
+                </div>
+            </div>
+        </div>
+
+        <div class = "chat-title">
+            <span th:if = "${chatActive}" th:text = "${otheruser.username}"></span>
+            <span th:unless = "${chatActive}" th:text = "'Choose a conversation'"></span>
+
+            <div th:if = "${chatActive}">
+                <a data-toggle="modal" data-target="#deletemodal">
+                    <i class = "fas fa-trash-alt deleteicon" data-toggle="tooltip" title = "Delete conversation"></i>
+                    <!--Modal Content-->
+                    <div class="modal fade" id="deletemodal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h3>Are you sure you want to delete
+                                        <span style="color: #169ef8; align-self: center"
+                                              th:text="${otheruser.username}"></span></h3>
+                                </div>
+                                <div class="modal-body" style="align-self: center">
+                                    <a th:href="@{'/home/' + ${user.id} + '/deleteconversation/' + ${otheruser.id}}"
+                                       class="btn btn-primary deleteuserbtn">Yes</a>
+                                    <a class="btn btn-primary nobtn" data-dismiss="modal" style="color: white;">No</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+        <div class = "chat-message-list">
+            <!--LISTING ALL MESSAGES FOR GIVEN CONVERSATION-->
+            <div th:each = "msg : ${msgList}">
+                <div class = "message-row your-message" th:if = "${msg.senderId} == ${user.id}">
+                    <div class = "message-text" th:text = "${msg.message}"></div>
+                    <div class = "message-time" th:text = "${#dates.format(msg.date, 'dd MMM')}"></div>
+                </div>
+                <div class = "message-row other-message" th:if = "${msg.senderId} != ${user.id}">
+                    <div class = "message-text" th:text = "${msg.message}"></div>
+                    <div class = "message-time" th:text = "${#dates.format(msg.date, 'dd MMM')}"></div>
+                </div>
+            </div>
+        </div>
+        <div class = "chat-form" th:if = "${chatActive}">
+            <form th:method = "post" th:action = "@{'/home/' + ${userid} + '/chatroom/' + ${otheruser.id}}">
+                <input class = "form-control msg-field" type="text" th:field = "${msg.message}" placeholder = "Type message">
+                <input class = "btn btn-primary send-message-btn" type="submit" value = "Send">
+            </form>
+        </div>
+
+        <div class = "chat-form" th:unless = "${chatActive}">
+            <form>
+                <input class = "form-control msg-field" type="text" disabled placeholder = "Type message">
+                <input class = "btn btn-primary send-message-btn" type="submit" value = "Send">
+            </form>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+</html>

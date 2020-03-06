@@ -1,0 +1,20 @@
+<div th:fragment="userop" xmlns:th="http://www.w3.org/1999/xhtml">
+    <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${users.id}">
+        <i class = "fas fa-trash-alt deleteicon" data-toggle="tooltip" title = "Delete user"></i>
+        <!--Modal Content-->
+        <div class="modal fade" id="deletemodal" th:attrappend="id=${users.id}">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3>Are you sure you want to delete <span style="color: #169ef8; align-self: center" th:text="${users.username}"></span></h3>
+                    </div>
+                    <div class="modal-body" style="align-self: center">
+                        <a th:href="@{'/home/' + ${user.id} + '/deleteuser/' + ${users.id}}" class="btn btn-primary deleteuserbtn">Yes</a>
+                        <a class="btn btn-primary nobtn" data-dismiss="modal" style="color: white;">No</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <a th:href="@{'/home/' + ${user.id} + '/edituser/' + ${users.id}}"><i class = "fas fa-user-edit editicon" data-toggle="tooltip" title = "Edit user"></i></a>
+</div>

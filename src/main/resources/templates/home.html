@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin</title>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/stylesheet.css" th:href = "@{/css/stylesheet.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+    <!--HEADER-->
+    <div th:include="fragments/header :: header"></div>
+<body>
+    <!--SIDEBAR-->
+    <div th:include="fragments/sidebar :: sidebar"></div>
+
+    <div class = wrapper>
+        <div class = "welcomemsg text-center" style = "text-transform: uppercase; color: #169ef8; margin-top: 10px" th:object = "${user}">
+            <h5>
+                Welcome
+                <span th:text = "${user.username}"></span>
+            </h5>
+        </div>
+
+        <!--LISTING ALL BLOGS-->
+        <div th:each = "blog: ${blogList}">
+            <div class = "blogposts">
+                <div class = "icon">
+                    <i class = "fas fa-user usericon" data-toggle="tooltip" th:title="${blog.user.username}"></i>
+                </div>
+
+                <div class = "title">
+                    <p th:text = "${blog.title}"></p>
+                </div>
+
+                <div class = "item">
+                    <!--ONLY SHOW IF ADMIN-->
+                    <div th:if = "${user.admin}">
+                        <!--POPUP MODAL ANCHOR TOGGLE-->
+                        <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${blog.id}">
+                            <i class="fas fa-trash-alt deleteicon" data-toggle="tooltip" title="Delete blog"></i>
+                            <!--POPUP MODAL CONTENT-->
+                            <div class="modal fade" id="deletemodal" th:attrappend="id=${blog.id}">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h3>Are you sure you want to delete
+                                                <span style="color: #169ef8; align-self: center" th:text="${blog.title}"></span>
+                                            </h3>
+                                        </div>
+                                        <div class="modal-body" style="align-self: center">
+                                            <a th:href="@{'/home/' + ${user.id} + '/deleteblog/' + ${blog.id}}"
+                                               class="btn btn-primary deleteuserbtn">
+                                                Yes
+                                            </a>
+                                            <a class="btn btn-primary nobtn" data-dismiss="modal" style="color: white;">No</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!--EDIT BLOG LINK-->
+                        <a th:href="@{'/home/' + ${user.id} + '/editblog/' + ${blog.id}}">
+                            <i class="fas fa-edit editicon" data-toggle="tooltip" title="Edit blog"></i>
+                        </a>
+                    </div>
+                    <!--VIEW BLOG CONTENT-->
+                    <a th:href="@{'/home/' + ${user.id} + '/viewblog/' + ${blog.id}}">
+                        <i class="fas fa-eye viewicon" data-toggle="tooltip" title="View blog"></i>
+                    </a>
+                </div>
+                <!--BLOG BODY-->
+                <div class = content>
+                    <p th:text = "${blog.body}"></p>
+                </div>
+                <!--BLOG DATE-->
+                <div class = "date">
+                    <p th:text = "${#dates.format(blog.date, 'dd MMM yyyy')}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--BOOTSTRAP-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>View Blog</title>
+    <script src= "https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/stylesheet.css" th:href = "@{/css/stylesheet.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+    <!--HEADER-->
+    <div th:include="fragments/header :: header"></div>
+<body>
+    <!--SIDEBAR-->
+    <div th:include="fragments/sidebar :: sidebar"></div>
+
+    <!--LISTING BLOG-->
+    <div class = "blogposts">
+        <div class = "icon">
+            <i class = "fas fa-user usericon" data-toggle="tooltip" th:title="${blog.user.username}"></i>
+        </div>
+        <!--BLOG TITLE-->
+        <div class = "title">
+            <p th:text = "${blog.title}"></p>
+        </div>
+        <!--BLOG BODY-->
+        <div class = content>
+            <p th:text = "${blog.body}"></p>
+        </div>
+        <!--BLOG DATE-->
+        <div class = "date">
+            <p th:text = "${#dates.format(blog.date, 'dd MMM yyyy')}"></p>
+        </div>
+    </div>
+
+    <div class = "commentsection">
+        <p class = "commentlabel">Comments</p>
+        <form th:method = "post" th:action = "@{'/' + ${userid} + '/' + ${blogid} + '/addcomment'}" th:object = "${comment}">
+            <div class = "textarea">
+                <textarea cols="60" rows="10" th:field = "${comment.comment}"></textarea>
+                <div th:if = "${editbool}">
+                    <input type="hidden" th:field = ${comment.commentid}>
+                    <input class="btn btn-primary addcommentbtn" type="submit" value="Save Comment">
+                </div>
+                <div th:unless = "${editbool}">
+                    <input class="btn btn-primary addcommentbtn" type="submit" value="Add Comment">
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class = "allComments">
+        <div th:each = "comment : ${commentList}">
+            <div th:if = "${comment.blogid} == ${blog.id}">
+                <div class = "commentPost">
+                    <div class = "commentitems">
+                        <!--ONLY SHOW IF ADMIN-->
+                        <div th:if = "${user.admin}">
+                            <!--POPUP MODAL ANCHOR TOGGLE-->
+                            <a data-toggle="modal" data-target="#deletemodal" th:attrappend="data-target=${comment.commentid}">
+                                <i class="fas fa-trash-alt deleteicon" data-toggle="tooltip" title="Delete comment"></i>
+                                <!--POPUP MODAL CONTENT-->
+                                <div class="modal fade" id="deletemodal" th:attrappend="id=${comment.commentid}">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h3>Are you sure you want to delete this comment</h3>
+                                            </div>
+                                            <div class="modal-body" style="align-self: center">
+                                                <a th:href="@{'/home/' + ${user.id} + '/deletecomment/' + ${blog.id} + '/' + ${comment.commentid}}"
+                                                   class="btn btn-primary deleteuserbtn">
+                                                    Yes
+                                                </a>
+                                                <a class="btn btn-primary nobtn" data-dismiss="modal" style="color: white;">No</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                        <div th:if = "${user.id} == ${comment.userid}">
+                        <!--EDIT COMMENT LINK-->
+                        <a th:href="@{'/home/' + ${user.id} + '/editcomment/' + ${blog.id} + '/' + ${comment.commentid}}">
+                            <i class="fas fa-edit editicon" data-toggle="tooltip" title="Edit comment"></i>
+                        </a>
+                        </div>
+                    </div>
+                    <p class = "comment" th:text = "${comment.comment}"></p>
+                    <div th:each = "user : ${userList}">
+                        <p class = "commentname" th:if = "${comment.userid} == ${user.id}" th:text = "'Skrevet af: ' + ${user.username}"></p>
+                    </div>
+                    <p class = "commentdate" th:text = "${#dates.format(comment.date, 'dd MMM yyyy')}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+</body>
+</html>

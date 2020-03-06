@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit User</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/stylesheet.css" th:href = "@{/css/stylesheet.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+    <!--HEADER-->
+    <div th:include="fragments/header :: header"></div>
+<body>
+    <!--SIDEBAR-->
+    <div th:include="fragments/sidebar :: sidebar"></div>
+    <!--EDIT USER FORM-->
+    <div class = "edituser" style = "width: 500px; margin: auto">
+        <form th:method = "post" th:action = "@{'/home/' + ${user.id} + '/edituser/' + ${users.id}}" th:object = "${users}">
+            <label class = "username">Username</label>
+            <input class = "form-control" type="text" disabled id = "username" th:field = "${users.username}">
+
+            <label class = "id">ID</label>
+            <input class = "form-control" disabled id = "id" th:field = "${users.id}" >
+
+            <label class = "role">Role</label>
+            <!--SELECT OPTION 'CHANGE USER STATUS'-->
+            <select class = "form-control" th:object="${user}" th:field="${users.admin}">
+                <option th:value=false th:text="User"></option>
+                <option th:value=true th:text="Admin"></option>
+            </select>
+            <div>
+                <input class="btn btn-primary addblogbtn" type="submit" value="Save" style="margin-top: 10px;">
+            </div>
+        </form>
+    </div>
+</body>
+</html>

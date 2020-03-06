@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Blog</title>
+    <link th:href="@{/webjars/bootstrap/4.3.1/css/bootstrap.min.css}" rel="stylesheet" media="screen"/>
+    <link rel = "stylesheet" type = "text/css" href = "/static/css/stylesheet.css" th:href = "@{/css/stylesheet.css}"/>
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/e0364b5885.js" crossorigin="anonymous"></script>
+</head>
+    <!--HEADER-->
+    <div th:include="fragments/header :: header"></div>
+<body>
+    <!--SIDEBAR-->
+    <div th:include="fragments/sidebar :: sidebar"></div>
+        <!--EDIT BLOG POST FORM-->
+        <div class = "addblogpost" style = "width: 500px; margin: auto" th:object = "${user}">
+            <form th:method = "post" th:action = "@{'/home/' + ${user.id} + '/addblog'}" th:object = "${blog}">
+                <label class = "title">Title on blog post</label>
+                <input class = "form-control" type="text" id = "title" th:field = "${blog.title}">
+
+                <label class = "addcontent">Content</label>
+                <textarea class = "form-control" rows = "10" cols = "50" id = "body" th:field = "${blog.body}" onkeyup="charcounts('body', 'countchar');" onkeydown="charcounts('body', 'countchar');" onmouseout="charcounts('body', 'countchar');"></textarea>
+
+                <p>You have typed <span id = "countchar" ></span> characters.</p>
+
+                <input type="hidden" id = "id" th:field = "${blog.id}">
+                <div>
+                    <input class="btn btn-primary addblogbtn" type="submit" value="Save Blog">
+                </div>
+            </form>
+        </div>
+    <!--JS CHAR COUNTER-->
+    <script type = "text/javascript" src = "/static/js/addblog.js" th:src = "@{/js/addblog.js}"></script>
+</body>
+</html>

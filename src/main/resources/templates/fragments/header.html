@@ -1,0 +1,18 @@
+<div th:fragment="header" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class = "header">
+        <div class = "row">
+            <div class = "col-sm text-left logopad">
+                <a class = "logo" th:href = "@{'/home/' + ${user.id}}">MyBlog</a>
+            </div>
+            <div class = "col-sm text-center">
+                <h3 class = "controlpanel"><i class="fas fa-user-shield"></i>Control Panel</h3>
+            </div>
+            <div class = "col-sm text-right">
+                <div class = "loginfo" th:object = "${user}">
+                    <p>Logged in as: <span th:text="${user.username}" class="username"></span></p>
+                </div>
+                <a class = "btn btn-primary logoutBtn" th:href="@{/login}">Logout</a>
+            </div>
+        </div>
+    </div>
+</div>
